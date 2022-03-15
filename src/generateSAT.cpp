@@ -56,8 +56,8 @@ void makeDiagonal(int n, const std::vector<int> &names, std::vector<std::vector<
         for (int first = std::max(0, diff); first < std::min(n, n + diff); ++first) {
             for (int second = std::max(0, diff); second < first; ++second) {
                 clauses.emplace_back();
-                clauses.back().push_back(names[first * n + first - diff]);
-                clauses.back().push_back(names[second * n + second - diff]);
+                clauses.back().push_back(-names[first * n + first - diff]);
+                clauses.back().push_back(-names[second * n + second - diff]);
             }
         }
     }
