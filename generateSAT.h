@@ -7,9 +7,9 @@
 #ifndef QUEENSPUZZLESATWITHC___GENERATESAT_H
 #define QUEENSPUZZLESATWITHC___GENERATESAT_H
 
-std::vector<std::string> generateNames(int n);
-void makeVertical(int n, const std::vector<std::string> &names, std::vector<std::vector<std::string>> &clauses);
-void makeHorizontal(int n, const std::vector<std::string> &names, std::vector<std::vector<std::string>> &clauses);
-void makeDiagonal(int n, const std::vector<std::string> &names, std::vector<std::vector<std::string>> &clauses);
+std::vector<int> generateNames(int n);
+void makeVertical(int n, const std::vector<int> &names, std::vector<std::vector<int>> &clauses);
+void makeHorizontal(int n, const std::vector<int> &names, std::vector<std::vector<int>> &clauses);
+void makeDiagonal(int n, const std::vector<int> &names, std::vector<std::vector<int>> &clauses);
 
 #endif //QUEENSPUZZLESATWITHC___GENERATESAT_H

@@ -1,73 +1,64 @@
 #include "generateSAT.h"
 #include <algorithm>
 
-std::string getPrefix(int i) {
-    int m = 'z' - 'a' + 1;
-    std::string prefix;
-    if (i == 0)
-        prefix = "a";
-    while (i > 0) {
-        int r = i % m;
-        prefix += char('a' + r);
-        i /= m;
-    }
-    std::reverse(prefix.begin(), prefix.end());
-    return prefix;
-}
-
-std::string getSuffix(int i) {
-    int m = 10;
-    std::string suffix;
-    if (i == 0)
-        suffix = "0";
-    while (i > 0) {
-        int r = i % m;
-        suffix += char('0' + r);
-        i /= m;
-    }
-    std::reverse(suffix.begin(), suffix.end());
-    return suffix;
-}
-
-std::vector<std::string> generateNames(int n) {
-    std::vector<std::string> names(0);
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            names.push_back(getPrefix(i) + getSuffix(j));
-        }
+std::vector<int> generateNames(int n) {
+    std::vector<int> names(0);
+    for (int i = 0; i < n * n; ++i) {
+        names.push_back(i + 1);
     }
     return names;
 }
 
-void makeVertical(int n, const std::vector<std::string> &names, std::vector<std::vector<std::string>> &clauses) {
+void makeVertical(int n, const std::vector<int> &names, std::vector<std::vector<int>> &clauses) {
     for (int i = 0; i < n; ++i) {
         clauses.emplace_back();
         for (int j = 0; j < n; ++j) {
             clauses.back().push_back(names[j * n + i]);
         }
+        for (int first = 0; first < n; ++first) {
+            for (int second = 0; second < first; ++second) {
+                clauses.emplace_back();
+                clauses.back().push_back(-names[first * n + i]);
+                clauses.back().push_back(-names[second * n + i]);
+            }
+        }
     }
 }
 
-void makeHorizontal(int n, const std::vector<std::string> &names, std::vector<std::vector<std::string>> &clauses) {
+void makeHorizontal(int n, const std::vector<int> &names, std::vector<std::vector<int>> &clauses) {
     for (int i = 0; i < n; ++i) {
         clauses.emplace_back();
         for (int j = 0; j < n; ++j) {
             clauses.back().push_back(names[i * n + j]);
         }
+        for (int first = 0; first < n; ++first) {
+            for (int second = 0; second < first; ++second) {
+                clauses.emplace_back();
+                clauses.back().push_back(-names[i * n + first]);
+                clauses.back().push_back(-names[i * n + second]);
+            }
+        }
     }
+
 }
 
-void makeDiagonal(int n, const std::vector<std::string> &names, std::vector<std::vector<std::string>> &clauses) {
+void makeDiagonal(int n, const std::vector<int> &names, std::vector<std::vector<int>> &clauses) {
     for (int sum = 0; sum < 2 * n - 1; ++sum) {
-        clauses.emplace_back();
-        for (int j = std::max(0, sum - n + 1); j < std::min(n, sum + 1); ++j) {
-            clauses.back().push_back(names[(sum - j) * n + j]);
+        for (int first = std::max(0, sum - n + 1); first < std::min(n, sum + 1); ++first) {
+            for (int second = std::max(0, sum - n + 1); second < first; ++second) {
+                clauses.emplace_back();
+                clauses.back().push_back(-names[(sum - first) * n + first]);
+                clauses.back().push_back(-names[(sum - second) * n + second]);
+            }
         }
     }
     for (int diff = -n + 1; diff < n; ++diff) {
-        clauses.emplace_back();
-        for (int i = std::max(0, diff); i < std::min(n, n + diff); ++i) {
-            clauses.back().push_back(names[i * n + (i - diff)]);
+        for (int first = std::max(0, diff); first < std::min(n, n + diff); ++first) {
+            for (int second = std::max(0, diff); second < first; ++second) {
+                clauses.emplace_back();
+                clauses.back().push_back(names[first * n + first - diff]);
+                clauses.back().push_back(names[second * n + second - diff]);
+            }
         }
     }
 }

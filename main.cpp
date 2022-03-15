@@ -5,10 +5,10 @@
 using namespace std;
 
 int main() {
-    vector<vector<string>> clauses;
+    vector<vector<int>> clauses;
     int n;
     cin >> n;
-    vector<string> names = generateNames(n);
+    vector<int> names = generateNames(n);
     if (names.size() != n * n) {
         throw runtime_error("names size isn't n * n");
     }
